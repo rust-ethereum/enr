@@ -67,8 +67,8 @@
 //!
 //! Note the `ed25519` feature flag must be set. This makes use of the
 //! [`EnrBuilder`] struct.
-//!
 //! ```rust
+//! # #[cfg(feature = "ed25519")] {
 //! use enr::{EnrBuilder, CombinedKey};
 //! use std::net::Ipv4Addr;
 //!
@@ -83,6 +83,7 @@
 //!
 //! assert_eq!(enr.ip(), Some("192.168.0.1".parse().unwrap()));
 //! assert_eq!(enr.id(), Some("v4".into()));
+//! # }
 //! ```
 //!
 //! ### Modifying an [`Enr`]
@@ -124,6 +125,7 @@
 //! ### Encoding/Decoding ENR's of various key types
 //!
 //! ```rust
+//! # #[cfg(feature = "ed25519")] {
 //! use enr::{EnrBuilder, secp256k1::SecretKey, Enr, ed25519_dalek::Keypair, CombinedKey};
 //! use std::net::Ipv4Addr;
 //! use rand::thread_rng;
@@ -154,6 +156,7 @@
 //! // use the combined key to be able to decode either
 //! let decoded_enr: Enr<CombinedKey> = base64_string_secp256k1.parse().unwrap();
 //! let decoded_enr: Enr<CombinedKey> = base64_string_ed25519.parse().unwrap();
+//! # }
 //! ```
 //!
 //!
@@ -745,8 +748,10 @@ impl<K: EnrKey> FromStr for Enr<K> {
         }
         // support both enr prefix and not
         let mut decode_string = base64_string;
-        if &base64_string[..4] == "enr:" {
-            decode_string = &decode_string[4..];
+        if base64_string.starts_with("enr:") {
+            decode_string = decode_string
+                .get(4..)
+                .ok_or_else(|| "Invalid ENR string".to_string())?;
         }
         let bytes = base64::decode_config(decode_string, base64::URL_SAFE_NO_PAD)
             .map_err(|e| format!("Invalid base64 encoding: {:?}", e))?;
