@@ -800,18 +800,15 @@ impl<K: EnrKey> rlp::Decodable for Enr<K> {
             return Err(DecoderError::RlpExpectedToBeList);
         }
 
-        let mut decoded_list = rlp.as_list::<Vec<u8>>().map_err(|_| {
-            debug!("Could not decode content: {}", rlp);
-            DecoderError::Custom("List decode fail")
-        })?;
+        let mut decoded_list: Vec<Rlp> = rlp.iter().collect();
 
         if decoded_list.is_empty() || decoded_list.len() % 2 != 0 {
             debug!("Failed to decode ENR. List size is not a multiple of 2.");
             return Err(DecoderError::Custom("List not a multiple of two"));
         }
 
-        let signature = decoded_list.remove(0);
-        let seq_bytes = decoded_list.remove(0);
+        let signature = decoded_list.remove(0).data()?;
+        let seq_bytes = decoded_list.remove(0).data()?;
 
         if seq_bytes.len() > 8 {
             debug!("Failed to decode ENR. Sequence number is not a u64.");
@@ -826,8 +823,8 @@ impl<K: EnrKey> rlp::Decodable for Enr<K> {
         let mut content = BTreeMap::new();
         let mut prev: Option<String> = None;
         for _ in 0..decoded_list.len() / 2 {
-            let key = decoded_list.remove(0);
-            let value = decoded_list.remove(0);
+            let key = decoded_list.remove(0).data()?;
+            let value = decoded_list.remove(0).data()?;
 
             let key = String::from_utf8_lossy(&key);
             // TODO: add tests for this error case
@@ -835,7 +832,7 @@ impl<K: EnrKey> rlp::Decodable for Enr<K> {
                 return Err(DecoderError::Custom("Unsorted keys"));
             }
             prev = Some(key.to_string());
-            content.insert(key.to_string(), value);
+            content.insert(key.to_string(), value.into());
         }
 
         // verify we know the signature type
@@ -847,7 +844,7 @@ impl<K: EnrKey> rlp::Decodable for Enr<K> {
         let enr = Self {
             seq,
             node_id,
-            signature,
+            signature: signature.into(),
             content,
             phantom: PhantomData,
         };
@@ -890,6 +887,18 @@ mod tests {
     use std::net::Ipv4Addr;
 
     type DefaultEnr = Enr<secp256k1::SecretKey>;
+
+    #[test]
+    fn test_geth_dns() {
+        let text = "enr:-Je4QIdx4eWpaemy4ECbJU2ZsXvzX3XsiF10QOjm-87XBkoaJdEq3qjijY7fMkhP1SZRUeqHodSczUCuj01eWWzQ2xc7g2V0aMfGhOAp6ZGAgmlkgnY0gmlwhLecb4iJc2VjcDI1NmsxoQPnve6T4T8AWndeYCCi-zJncpl_W_SR8Wky_rUI8MxR24N0Y3CCdmCDdWRwgnZg";
+        let enr = text.parse::<DefaultEnr>().unwrap();
+        dbg!(enr.ip());
+        dbg!(enr.ip6());
+        dbg!(enr.tcp());
+        dbg!(enr.tcp6());
+        dbg!(enr.udp());
+        dbg!(enr.udp6());
+    }
 
     #[cfg(feature = "libsecp256k1")]
     #[test]
