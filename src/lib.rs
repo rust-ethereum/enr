@@ -888,18 +888,6 @@ mod tests {
 
     type DefaultEnr = Enr<secp256k1::SecretKey>;
 
-    #[test]
-    fn test_geth_dns() {
-        let text = "enr:-Je4QIdx4eWpaemy4ECbJU2ZsXvzX3XsiF10QOjm-87XBkoaJdEq3qjijY7fMkhP1SZRUeqHodSczUCuj01eWWzQ2xc7g2V0aMfGhOAp6ZGAgmlkgnY0gmlwhLecb4iJc2VjcDI1NmsxoQPnve6T4T8AWndeYCCi-zJncpl_W_SR8Wky_rUI8MxR24N0Y3CCdmCDdWRwgnZg";
-        let enr = text.parse::<DefaultEnr>().unwrap();
-        dbg!(enr.ip());
-        dbg!(enr.ip6());
-        dbg!(enr.tcp());
-        dbg!(enr.tcp6());
-        dbg!(enr.udp());
-        dbg!(enr.udp6());
-    }
-
     #[cfg(feature = "libsecp256k1")]
     #[test]
     fn test_vector() {
@@ -947,6 +935,26 @@ mod tests {
         assert_eq!(pubkey, expected_pubkey);
         assert_eq!(enr.node_id().raw().to_vec(), expected_node_id);
 
+        assert!(enr.verify());
+    }
+
+    // the values in the content are rlp lists
+    #[test]
+    fn test_rlp_list_value() {
+        let text = "enr:-Je4QIdx4eWpaemy4ECbJU2ZsXvzX3XsiF10QOjm-87XBkoaJdEq3qjijY7fMkhP1SZRUeqHodSczUCuj01eWWzQ2xc7g2V0aMfGhOAp6ZGAgmlkgnY0gmlwhLecb4iJc2VjcDI1NmsxoQPnve6T4T8AWndeYCCi-zJncpl_W_SR8Wky_rUI8MxR24N0Y3CCdmCDdWRwgnZg";
+        let signature = hex::decode("8771e1e5a969e9b2e0409b254d99b17bf35f75ec885d7440e8e6fbced7064a1a25d12adea8e28d8edf32484fd5265151ea87a1d49ccd40ae8f4d5e596cd0db17").unwrap();
+        let expected_pubkey =
+            hex::decode("03e7bdee93e13f005a775e6020a2fb326772997f5bf491f16932feb508f0cc51db")
+                .unwrap();
+        let enr = text.parse::<DefaultEnr>().unwrap();
+
+        assert_eq!(enr.ip(), Some(Ipv4Addr::new(183, 156, 111, 136)));
+        assert_eq!(enr.id(), Some(String::from("v4")));
+        assert_eq!(enr.udp(), Some(30304));
+        assert_eq!(enr.tcp(), Some(30304));
+        assert_eq!(enr.seq(), 59);
+        assert_eq!(enr.signature(), &signature[..]);
+        assert_eq!(enr.public_key().encode(), expected_pubkey);
         assert!(enr.verify());
     }
 
