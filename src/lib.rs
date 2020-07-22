@@ -941,18 +941,18 @@ mod tests {
     // the values in the content are rlp lists
     #[test]
     fn test_rlp_list_value() {
-        let text = "enr:-Je4QIdx4eWpaemy4ECbJU2ZsXvzX3XsiF10QOjm-87XBkoaJdEq3qjijY7fMkhP1SZRUeqHodSczUCuj01eWWzQ2xc7g2V0aMfGhOAp6ZGAgmlkgnY0gmlwhLecb4iJc2VjcDI1NmsxoQPnve6T4T8AWndeYCCi-zJncpl_W_SR8Wky_rUI8MxR24N0Y3CCdmCDdWRwgnZg";
-        let signature = hex::decode("8771e1e5a969e9b2e0409b254d99b17bf35f75ec885d7440e8e6fbced7064a1a25d12adea8e28d8edf32484fd5265151ea87a1d49ccd40ae8f4d5e596cd0db17").unwrap();
+        let text = "enr:-Je4QH0uN2HkMRmscUp6yvyTOPGtOg9U6lCxBFvCGynyystnDNRJbfz5GhXXY2lcu9tsghMxRiYHoznBwG46GQ7dfm0og2V0aMfGhMvbiDiAgmlkgnY0gmlwhA6hJmuJc2VjcDI1NmsxoQJBP4kg9GNBurV3uVXgR72u1n-XIABibUZLT1WvJLKwvIN0Y3CCdyeDdWRwgncn";
+        let signature = hex::decode("7d2e3761e43119ac714a7acafc9338f1ad3a0f54ea50b1045bc21b29f2cacb670cd4496dfcf91a15d763695cbbdb6c821331462607a339c1c06e3a190edd7e6d").unwrap();
         let expected_pubkey =
-            hex::decode("03e7bdee93e13f005a775e6020a2fb326772997f5bf491f16932feb508f0cc51db")
+            hex::decode("02413f8920f46341bab577b955e047bdaed67f972000626d464b4f55af24b2b0bc")
                 .unwrap();
         let enr = text.parse::<DefaultEnr>().unwrap();
 
-        assert_eq!(enr.ip(), Some(Ipv4Addr::new(183, 156, 111, 136)));
+        assert_eq!(enr.ip(), Some(Ipv4Addr::new(14, 161, 38, 107)));
         assert_eq!(enr.id(), Some(String::from("v4")));
-        assert_eq!(enr.udp(), Some(30304));
-        assert_eq!(enr.tcp(), Some(30304));
-        assert_eq!(enr.seq(), 59);
+        assert_eq!(enr.udp(), Some(30503));
+        assert_eq!(enr.tcp(), Some(30503));
+        assert_eq!(enr.seq(), 40);
         assert_eq!(enr.signature(), &signature[..]);
         assert_eq!(enr.public_key().encode(), expected_pubkey);
         assert!(enr.verify());
