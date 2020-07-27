@@ -1,0 +1,34 @@
+
+[package]
+name = "enr-fuzz"
+version = "0.0.0"
+authors = ["Automatically generated"]
+publish = false
+edition = "2018"
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.3"
+rlp = "0.4.3"
+
+[dependencies.enr]
+path = ".."
+features = ["ed25519", "serde", "libsecp256k1"]
+
+# Prevent this from interfering with workspaces
+[workspace]
+members = ["."]
+
+[[bin]]
+name = "fuzz_decode"
+path = "fuzz_targets/fuzz_decode.rs"
+
+[[bin]]
+name = "fuzz_decode_ed25519"
+path = "fuzz_targets/fuzz_decode_ed25519.rs"
+
+[[bin]]
+name = "fuzz_decode_combined"
+path = "fuzz_targets/fuzz_decode_combined.rs"
