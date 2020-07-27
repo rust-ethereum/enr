@@ -12,14 +12,19 @@ cargo-fuzz = true
 [dependencies]
 libfuzzer-sys = "0.3"
 rlp = "0.4.3"
+base64 = "0.12.1"
 
 [dependencies.enr]
 path = ".."
-features = ["ed25519", "serde", "libsecp256k1"]
 
 # Prevent this from interfering with workspaces
 [workspace]
 members = ["."]
+
+[features]
+default = ["enr/serde", "enr/libsecp256k1", "enr/ed25519"]
+# c-secp256k1 = ["enr/serde", "enr/c-secp256k1"]
+
 
 [[bin]]
 name = "fuzz_decode"
@@ -32,3 +37,11 @@ path = "fuzz_targets/fuzz_decode_ed25519.rs"
 [[bin]]
 name = "fuzz_decode_combined"
 path = "fuzz_targets/fuzz_decode_combined.rs"
+
+[[bin]]
+name = "fuzz_from_str"
+path = "fuzz_targets/fuzz_from_str.rs"
+
+[[bin]]
+name = "fuzz_from_str_base64"
+path = "fuzz_targets/fuzz_from_str_base64.rs"
