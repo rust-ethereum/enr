@@ -1,10 +1,9 @@
 #![no_main]
-#[macro_use] extern crate libfuzzer_sys;
+#[macro_use]
+extern crate libfuzzer_sys;
 extern crate enr;
-extern crate rlp;
 
-use enr::{Enr, CombinedKey};
-use rlp::Decodable;
+use enr::{CombinedKey, Enr};
 use std::str::FromStr;
 
 // Fuzz Enr::decode

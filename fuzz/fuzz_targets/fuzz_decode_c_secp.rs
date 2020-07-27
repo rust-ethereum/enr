@@ -4,7 +4,7 @@ extern crate libfuzzer_sys;
 extern crate enr;
 extern crate rlp;
 
-use enr::{secp256k1::SecretKey, Enr};
+use enr::{c_secp256k1::SecretKey, Enr};
 use rlp::Decodable;
 
 // Fuzz Enr::decode

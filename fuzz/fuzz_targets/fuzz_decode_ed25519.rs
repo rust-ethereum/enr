@@ -1,9 +1,10 @@
 #![no_main]
-#[macro_use] extern crate libfuzzer_sys;
+#[macro_use]
+extern crate libfuzzer_sys;
 extern crate enr;
 extern crate rlp;
 
-use enr::{Enr, ed25519_dalek::Keypair};
+use enr::{ed25519_dalek::Keypair, Enr};
 use rlp::Decodable;
 
 // Fuzz Enr::decode
