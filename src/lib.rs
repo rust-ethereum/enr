@@ -464,7 +464,7 @@ impl<K: EnrKey> Enr<K> {
         enr_key: &K,
     ) -> Result<Option<Vec<u8>>, EnrError> {
         // currently only support "v4" identity schemes
-        if key.as_ref() == "id".as_bytes() && value != b"v4" {
+        if key.as_ref() == b"id" && value != b"v4" {
             return Err(EnrError::UnsupportedIdentityScheme);
         }
 
@@ -639,7 +639,7 @@ impl<K: EnrKey> Enr<K> {
                     if let Some(ip) = prev_ip {
                         self.content.insert("ip".into(), ip);
                     } else {
-                        self.content.remove("ip".as_bytes());
+                        self.content.remove(b"ip".as_ref());
                     }
                     if let Some(udp) = prev_port {
                         self.content.insert(port_string, udp);
@@ -651,7 +651,7 @@ impl<K: EnrKey> Enr<K> {
                     if let Some(ip) = prev_ip {
                         self.content.insert("ip6".into(), ip);
                     } else {
-                        self.content.remove("ip6".as_bytes());
+                        self.content.remove(b"ip6".as_ref());
                     }
                     if let Some(udp) = prev_port {
                         self.content.insert(port_v6_string, udp);
