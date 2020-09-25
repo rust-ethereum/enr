@@ -39,12 +39,14 @@ impl EnrKey for c_secp256k1::SecretKey {
 impl EnrPublicKey for c_secp256k1::PublicKey {
     fn verify_v4(&self, msg: &[u8], sig: &[u8]) -> bool {
         let msg = digest(msg);
-        c_secp256k1::Signature::from_compact(sig)
-            .and_then(|sig| {
-                c_secp256k1::Message::from_slice(&msg)
-                    .map(|m| c_secp256k1::Secp256k1::new().verify(&m, &sig, self))
-            })
-            .is_ok()
+        if let Ok(sig) = c_secp256k1::Signature::from_compact(sig) {
+            if let Ok(msg) = c_secp256k1::Message::from_slice(&msg) {
+                return c_secp256k1::Secp256k1::new()
+                    .verify(&msg, &sig, self)
+                    .is_ok();
+            }
+        }
+        false
     }
 
     fn encode(&self) -> Vec<u8> {

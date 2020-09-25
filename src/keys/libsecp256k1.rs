@@ -48,11 +48,12 @@ impl EnrPublicKey for secp256k1::PublicKey {
     /// Verify a raw message, given a public key for the v4 identity scheme.
     fn verify_v4(&self, msg: &[u8], sig: &[u8]) -> bool {
         let msg = digest(msg);
-        secp256k1::Signature::parse_slice(sig)
-            .and_then(|sig| {
-                secp256k1::Message::parse_slice(&msg).map(|m| secp256k1::verify(&m, &sig, self))
-            })
-            .is_ok()
+        if let Ok(sig) = secp256k1::Signature::parse_slice(sig) {
+            if let Ok(msg) = secp256k1::Message::parse_slice(&msg) {
+                return secp256k1::verify(&msg, &sig, self);
+            }
+        }
+        false
     }
 
     /// Encodes the public key into compressed form, if possible.
