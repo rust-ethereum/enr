@@ -61,7 +61,7 @@ impl EnrPublicKey for VerifyKey {
     }
 
     fn encode_uncompressed(&self) -> Vec<u8> {
-        EncodedPoint::from(self).decompress().unwrap().to_bytes()[1..].to_vec()
+        EncodedPoint::from(self).to_untagged_bytes().unwrap().to_vec()
     }
 
     fn enr_key(&self) -> Key {
