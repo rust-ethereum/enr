@@ -108,7 +108,7 @@
 //!
 //! enr.set_tcp(8001, &key);
 //! // set a custom key
-//! enr.insert("custom_key", vec![0,0,1], &key);
+//! enr.insert("custom_key", &vec![0,0,1], &key);
 //!
 //! // encode to base64
 //! let base_64_string = enr.to_base64();
@@ -470,7 +470,7 @@ impl<K: EnrKey> Enr<K> {
     pub fn insert(
         &mut self,
         key: impl AsRef<[u8]>,
-        value: Vec<u8>,
+        value: &[u8],
         enr_key: &K,
     ) -> Result<Option<Vec<u8>>, EnrError> {
         self.insert_raw_rlp(key, rlp::encode(&value), enr_key)
@@ -539,7 +539,7 @@ impl<K: EnrKey> Enr<K> {
     pub fn set_ip(&mut self, ip: IpAddr, key: &K) -> Result<Option<IpAddr>, EnrError> {
         match ip {
             IpAddr::V4(addr) => {
-                let prev_value = self.insert("ip", addr.octets().to_vec(), key)?;
+                let prev_value = self.insert("ip", &addr.octets(), key)?;
                 if let Some(bytes) = prev_value {
                     if bytes.len() == 4 {
                         let mut v = [0_u8; 4];
@@ -549,7 +549,7 @@ impl<K: EnrKey> Enr<K> {
                 }
             }
             IpAddr::V6(addr) => {
-                let prev_value = self.insert("ip6", addr.octets().to_vec(), key)?;
+                let prev_value = self.insert("ip6", &addr.octets(), key)?;
                 if let Some(bytes) = prev_value {
                     if bytes.len() == 16 {
                         let mut v = [0_u8; 16];
@@ -565,7 +565,7 @@ impl<K: EnrKey> Enr<K> {
 
     /// Sets the `udp` field of the ENR. Returns any pre-existing UDP port in the record.
     pub fn set_udp(&mut self, udp: u16, key: &K) -> Result<Option<u16>, EnrError> {
-        if let Some(udp_bytes) = self.insert("udp", udp.to_be_bytes().to_vec(), key)? {
+        if let Some(udp_bytes) = self.insert("udp", &udp.to_be_bytes(), key)? {
             if udp_bytes.len() <= 2 {
                 let mut v = [0_u8; 2];
                 v[2 - udp_bytes.len()..].copy_from_slice(&udp_bytes);
@@ -577,7 +577,7 @@ impl<K: EnrKey> Enr<K> {
 
     /// Sets the `udp6` field of the ENR. Returns any pre-existing UDP port in the record.
     pub fn set_udp6(&mut self, udp: u16, key: &K) -> Result<Option<u16>, EnrError> {
-        if let Some(udp_bytes) = self.insert("udp6", udp.to_be_bytes().to_vec(), key)? {
+        if let Some(udp_bytes) = self.insert("udp6", &udp.to_be_bytes(), key)? {
             if udp_bytes.len() <= 2 {
                 let mut v = [0_u8; 2];
                 v[2 - udp_bytes.len()..].copy_from_slice(&udp_bytes);
@@ -589,7 +589,7 @@ impl<K: EnrKey> Enr<K> {
 
     /// Sets the `tcp` field of the ENR. Returns any pre-existing tcp port in the record.
     pub fn set_tcp(&mut self, tcp: u16, key: &K) -> Result<Option<u16>, EnrError> {
-        if let Some(tcp_bytes) = self.insert("tcp", tcp.to_be_bytes().to_vec(), key)? {
+        if let Some(tcp_bytes) = self.insert("tcp", &tcp.to_be_bytes(), key)? {
             if tcp_bytes.len() <= 2 {
                 let mut v = [0_u8; 2];
                 v[2 - tcp_bytes.len()..].copy_from_slice(&tcp_bytes);
@@ -601,7 +601,7 @@ impl<K: EnrKey> Enr<K> {
 
     /// Sets the `tcp6` field of the ENR. Returns any pre-existing tcp6 port in the record.
     pub fn set_tcp6(&mut self, tcp: u16, key: &K) -> Result<Option<u16>, EnrError> {
-        if let Some(tcp_bytes) = self.insert("tcp6", tcp.to_be_bytes().to_vec(), key)? {
+        if let Some(tcp_bytes) = self.insert("tcp6", &tcp.to_be_bytes(), key)? {
             if tcp_bytes.len() <= 2 {
                 let mut v = [0_u8; 2];
                 v[2 - tcp_bytes.len()..].copy_from_slice(&tcp_bytes);
@@ -709,7 +709,7 @@ impl<K: EnrKey> Enr<K> {
 
     /// Sets a new public key for the record.
     pub fn set_public_key(&mut self, public_key: &K::PublicKey, key: &K) -> Result<(), EnrError> {
-        self.insert(&public_key.enr_key(), public_key.encode(), key)
+        self.insert(&public_key.enr_key(), &public_key.encode(), key)
             .map(|_| {})
     }
 
@@ -1217,7 +1217,7 @@ mod tests {
             builder.build(&key).unwrap()
         };
 
-        if let Err(e) = enr.insert("random", Vec::new(), &key) {
+        if let Err(e) = enr.insert("random", &Vec::new(), &key) {
             panic!(e);
         }
         assert!(enr.verify());
