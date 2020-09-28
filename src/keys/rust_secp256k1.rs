@@ -31,6 +31,8 @@ impl EnrKey for c_secp256k1::SecretKey {
             .get(ENR_KEY.as_bytes())
             .ok_or_else(|| DecoderError::Custom("Unknown signature"))?;
         // should be encoded in compressed form, i.e 33 byte raw secp256k1 public key
+        // Decode the RLP
+        let pubkey_bytes = rlp::Rlp::new(pubkey_bytes).data()?;
         c_secp256k1::PublicKey::from_slice(pubkey_bytes)
             .map_err(|_| DecoderError::Custom("Invalid Secp256k1 Signature"))
     }
