@@ -848,7 +848,6 @@ impl<K: EnrKey> rlp::Decodable for Enr<K> {
             return Err(DecoderError::RlpExpectedToBeList);
         }
 
-        dbg!(hex::encode(rlp.as_raw()));
         let mut decoded_list: Vec<Rlp> = rlp.iter().collect();
 
         if decoded_list.is_empty() || decoded_list.len() % 2 != 0 {
@@ -879,10 +878,6 @@ impl<K: EnrKey> rlp::Decodable for Enr<K> {
             let _ = item.data()?;
             let value = item.as_raw();
 
-            dbg!(String::from_utf8_lossy(&key));
-            dbg!(hex::encode(&key));
-            dbg!(hex::encode(value));
-
             if prev.is_some() && prev.as_ref() >= Some(&key) {
                 return Err(DecoderError::Custom("Unsorted keys"));
             }
@@ -903,8 +898,6 @@ impl<K: EnrKey> rlp::Decodable for Enr<K> {
             content,
             phantom: PhantomData,
         };
-
-        dbg!(hex::encode(&enr.rlp_content()));
 
         // verify the signature before returning
         // if the public key is of an unknown type, this will fail.
@@ -1224,13 +1217,7 @@ mod tests {
             builder.build(&key).unwrap()
         };
 
-        println!("{:?}", enr.id());
-        if let Some(v) = enr.get("secp256k1") {
-            dbg!(hex::encode(v));
-        }
-
         if let Err(e) = enr.insert("random", Vec::new(), &key) {
-            println!("{:?}", e);
             panic!(e);
         }
         assert!(enr.verify());
