@@ -196,7 +196,7 @@ pub use keys::c_secp256k1;
 pub use keys::k256;
 #[cfg(feature = "libsecp256")]
 pub use keys::secp256k1;
-#[cfg(feature = "ed25519")]
+#[cfg(all(feature = "ed25519", feature = "k256"))]
 pub use keys::{ed25519_dalek, CombinedKey, CombinedPublicKey};
 
 pub use keys::{EnrKey, EnrPublicKey};
@@ -1182,7 +1182,7 @@ mod tests {
         assert!(decoded_enr.verify());
     }
 
-    #[cfg(feature = "ed25519")]
+    #[cfg(all(feature = "ed25519", feature = "k256"))]
     #[test]
     fn test_encode_decode_ed25519() {
         let mut rng = rand::thread_rng();
@@ -1277,7 +1277,7 @@ mod tests {
         );
     }
 
-    #[cfg(feature = "ed25519")]
+    #[cfg(all(feature = "ed25519", feature = "k256"))]
     #[test]
     fn combined_key_can_decode_all() {
         // generate a random secp256k1 key
