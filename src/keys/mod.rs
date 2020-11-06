@@ -57,6 +57,12 @@ pub trait EnrKey: Send + Sync + Unpin + 'static {
     fn enr_to_public(content: &BTreeMap<Key, Vec<u8>>) -> Result<Self::PublicKey, DecoderError>;
 }
 
+/// Trait for keys that are uniquely represented
+pub trait EnrKeyUnambiguous: EnrKey {
+    /// Decode raw bytes as corresponding public key.
+    fn decode_public(bytes: &[u8]) -> Result<Self::PublicKey, DecoderError>;
+}
+
 /// The trait required for a `PublicKey` to verify an ENR record.
 pub trait EnrPublicKey: Clone + Debug + Send + Sync + Unpin + 'static {
     /// Verify an ENR signature for the `v4` identity scheme.
