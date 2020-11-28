@@ -640,18 +640,18 @@ impl<K: EnrKey> Enr<K> {
         let (prev_ip, prev_port) = match socket.ip() {
             IpAddr::V4(addr) => (
                 self.content
-                    .insert("ip".into(), rlp::encode(&addr.octets().to_vec())),
+                    .insert("ip".into(), rlp::encode(&(&addr.octets() as &[u8]))),
                 self.content.insert(
                     port_string.clone(),
-                    rlp::encode(&socket.port().to_be_bytes().to_vec()),
+                    rlp::encode(&(&socket.port().to_be_bytes() as &[u8])),
                 ),
             ),
             IpAddr::V6(addr) => (
                 self.content
-                    .insert("ip6".into(), rlp::encode(&addr.octets().to_vec())),
+                    .insert("ip6".into(), rlp::encode(&(&addr.octets() as &[u8]))),
                 self.content.insert(
                     port_v6_string.clone(),
-                    rlp::encode(&socket.port().to_be_bytes().to_vec()),
+                    rlp::encode(&(&socket.port().to_be_bytes() as &[u8])),
                 ),
             ),
         };
