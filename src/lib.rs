@@ -502,9 +502,10 @@ impl<K: EnrKey> Enr<K> {
         let previous_value = self.content.insert(key.as_ref().to_vec(), value);
         // add the new public key
         let public_key = enr_key.public();
-        let previous_key = self
-            .content
-            .insert(public_key.enr_key(), rlp::encode(&public_key.encode()));
+        let previous_key = self.content.insert(
+            public_key.enr_key(),
+            rlp::encode(&public_key.encode().as_ref()),
+        );
 
         // check the size of the record
         if self.size() > MAX_ENR_SIZE {
@@ -657,9 +658,10 @@ impl<K: EnrKey> Enr<K> {
         };
 
         let public_key = key.public();
-        let previous_key = self
-            .content
-            .insert(public_key.enr_key(), rlp::encode(&public_key.encode()));
+        let previous_key = self.content.insert(
+            public_key.enr_key(),
+            rlp::encode(&public_key.encode().as_ref()),
+        );
 
         // check the size and revert on failure
         if self.size() > MAX_ENR_SIZE {
@@ -717,7 +719,7 @@ impl<K: EnrKey> Enr<K> {
 
     /// Sets a new public key for the record.
     pub fn set_public_key(&mut self, public_key: &K::PublicKey, key: &K) -> Result<(), EnrError> {
-        self.insert(&public_key.enr_key(), &public_key.encode(), key)
+        self.insert(&public_key.enr_key(), public_key.encode().as_ref(), key)
             .map(|_| {})
     }
 
@@ -964,7 +966,7 @@ mod tests {
         assert_eq!(enr.udp(), Some(30303));
         assert_eq!(enr.tcp(), None);
         assert_eq!(enr.signature(), &signature[..]);
-        assert_eq!(pubkey, expected_pubkey);
+        assert_eq!(pubkey.to_vec(), expected_pubkey);
         assert!(enr.verify());
     }
 
@@ -986,7 +988,7 @@ mod tests {
         assert_eq!(enr.udp(), Some(30303));
         assert_eq!(enr.tcp(), None);
         assert_eq!(enr.signature(), &signature[..]);
-        assert_eq!(pubkey, expected_pubkey);
+        assert_eq!(pubkey.to_vec(), expected_pubkey);
         assert!(enr.verify());
     }
 
@@ -1012,7 +1014,7 @@ mod tests {
         assert_eq!(enr.tcp(), None);
         assert_eq!(enr.tcp6(), None);
         assert_eq!(enr.signature(), &signature[..]);
-        assert_eq!(pubkey, expected_pubkey);
+        assert_eq!(pubkey.to_vec(), expected_pubkey);
         assert_eq!(enr.node_id().raw().to_vec(), expected_node_id);
 
         assert!(enr.verify());
@@ -1040,7 +1042,7 @@ mod tests {
         assert_eq!(enr.tcp(), None);
         assert_eq!(enr.tcp6(), None);
         assert_eq!(enr.signature(), &signature[..]);
-        assert_eq!(pubkey, expected_pubkey);
+        assert_eq!(pubkey.to_vec(), expected_pubkey);
         assert_eq!(enr.node_id().raw().to_vec(), expected_node_id);
 
         assert!(enr.verify());
@@ -1062,7 +1064,7 @@ mod tests {
         assert_eq!(enr.tcp(), Some(30503));
         assert_eq!(enr.seq(), 40);
         assert_eq!(enr.signature(), &signature[..]);
-        assert_eq!(enr.public_key().encode(), expected_pubkey);
+        assert_eq!(enr.public_key().encode().to_vec(), expected_pubkey);
 
         assert!(enr.verify());
     }
