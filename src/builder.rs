@@ -144,8 +144,7 @@ impl<K: EnrKey> EnrBuilder<K> {
             }
         }
 
-        let id_bytes = &self.id.as_bytes().to_vec();
-        self.add_value("id", id_bytes);
+        self.add_value_rlp("id", rlp::encode(&self.id.as_bytes()));
 
         self.add_public_key(&key.public());
         let rlp_content = self.rlp_content();
