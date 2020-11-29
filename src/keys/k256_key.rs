@@ -37,7 +37,7 @@ impl EnrKey for SigningKey {
     fn enr_to_public(content: &BTreeMap<Key, Vec<u8>>) -> Result<Self::PublicKey, DecoderError> {
         let pubkey_bytes = content
             .get(ENR_KEY.as_bytes())
-            .ok_or_else(|| DecoderError::Custom("Unknown signature"))?;
+            .ok_or(DecoderError::Custom("Unknown signature"))?;
 
         // Decode the RLP
         let pubkey_bytes = rlp::Rlp::new(pubkey_bytes).data()?;

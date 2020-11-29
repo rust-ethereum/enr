@@ -170,7 +170,11 @@
 //! [`get`]: struct.Enr.html#method.get
 
 #![warn(clippy::all, clippy::pedantic, clippy::nursery)]
-#![allow(clippy::missing_errors_doc, clippy::module_name_repetitions)]
+#![allow(
+    clippy::map_err_ignore,
+    clippy::missing_errors_doc,
+    clippy::module_name_repetitions
+)]
 
 mod builder;
 mod keys;
@@ -523,7 +527,7 @@ impl<K: EnrKey> Enr<K> {
         self.seq = self
             .seq
             .checked_add(1)
-            .ok_or_else(|| EnrError::SequenceNumberTooHigh)?;
+            .ok_or(EnrError::SequenceNumberTooHigh)?;
 
         // sign the record
         self.sign(enr_key)?;
@@ -700,7 +704,7 @@ impl<K: EnrKey> Enr<K> {
         self.seq = self
             .seq
             .checked_add(1)
-            .ok_or_else(|| EnrError::SequenceNumberTooHigh)?;
+            .ok_or(EnrError::SequenceNumberTooHigh)?;
 
         // sign the record
         self.sign(key)?;
