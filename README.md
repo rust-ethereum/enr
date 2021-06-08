@@ -57,7 +57,7 @@ enr = { version = "*", features = ["serde", "ed25519", "rust-secp256k1"] }
 
 To build an ENR, an `EnrBuilder` is provided.
 
-#### Building an ENR with the default `secp256k1` key type
+#### Building an ENR with the default `k256` key type
 
 ```rust
 use enr::{EnrBuilder, k256};
