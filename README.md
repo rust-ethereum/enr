@@ -64,17 +64,15 @@ use enr::{EnrBuilder, k256};
 use std::net::Ipv4Addr;
 use rand::thread_rng;
 
-fn main() {
-    let mut rng = thread_rng();
-    // generate a random secp256k1 key
-    let key = k256::ecdsa::SigningKey::random(&mut rng);
+let mut rng = thread_rng();
+// generate a random k256 key
+let key = k256::ecdsa::SigningKey::random(&mut rng);
 
-    let ip = Ipv4Addr::new(192,168,0,1);
-    let enr = EnrBuilder::new("v4").ip(ip.into()).tcp(8000).build(&key).unwrap();
+let ip = Ipv4Addr::new(192,168,0,1);
+let enr = EnrBuilder::new("v4").ip(ip.into()).tcp(8000).build(&key).unwrap();
 
-    assert_eq!(enr.ip(), Some("192.168.0.1".parse().unwrap()));
-    assert_eq!(enr.id(), Some("v4".into()));
-}
+assert_eq!(enr.ip(), Some("192.168.0.1".parse().unwrap()));
+assert_eq!(enr.id(), Some("v4".into()));
 ```
 
 #### Building an ENR with the `CombinedKey` type (support for multiple signing algorithms).
@@ -86,7 +84,7 @@ Note the `ed25519` feature flag must be set. This makes use of the
 use enr::{EnrBuilder, CombinedKey};
 use std::net::Ipv4Addr;
 
-// create a new secp256k1 key
+// create a new k256 key
 let key = CombinedKey::generate_secp256k1();
 
 // or create a new ed25519 key
@@ -139,7 +137,7 @@ use enr::{EnrBuilder, k256::ecdsa::SigningKey, Enr, ed25519_dalek::Keypair, Comb
 use std::net::Ipv4Addr;
 use rand::thread_rng;
 
-// generate a random secp256k1 key
+// generate a random k256 key
 let mut rng = thread_rng();
 let key = SigningKey::random(&mut rng);
 let ip = Ipv4Addr::new(192,168,0,1);
