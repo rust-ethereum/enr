@@ -878,7 +878,7 @@ impl<K: EnrKey> rlp::Decodable for Enr<K> {
         let seq = u64::from_be_bytes(seq);
 
         let mut content = BTreeMap::new();
-        let mut prev: Option<Key> = None;
+        let mut prev: Option<&[u8]> = None;
         while let Some(key) = rlp_iter.next() {
             let key = key.data()?;
             let item = rlp_iter
@@ -889,10 +889,10 @@ impl<K: EnrKey> rlp::Decodable for Enr<K> {
             let _ = item.data()?;
             let value = item.as_raw();
 
-            if prev.is_some() && prev.as_deref() >= Some(key) {
+            if prev.is_some() && prev >= Some(key) {
                 return Err(DecoderError::Custom("Unsorted keys"));
             }
-            prev = Some(key.to_vec());
+            prev = Some(key);
             content.insert(key.to_vec(), Bytes::copy_from_slice(value));
         }
 
