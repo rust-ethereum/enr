@@ -49,7 +49,7 @@ impl<K: EnrKey> EnrBuilder<K> {
         self
     }
 
-    /// Adds an `ip` field to the `ENRBuilder`.
+    /// Adds an `ip`/`ip6` field to the `ENRBuilder`.
     pub fn ip(&mut self, ip: IpAddr) -> &mut Self {
         match ip {
             IpAddr::V4(addr) => {
@@ -74,7 +74,7 @@ impl<K: EnrKey> EnrBuilder<K> {
     */
 
     /// Adds a `tcp` field to the `ENRBuilder`.
-    pub fn tcp(&mut self, tcp: u16) -> &mut Self {
+    pub fn tcp4(&mut self, tcp: u16) -> &mut Self {
         self.add_value("tcp", &tcp.to_be_bytes());
         self
     }
@@ -86,7 +86,7 @@ impl<K: EnrKey> EnrBuilder<K> {
     }
 
     /// Adds a `udp` field to the `ENRBuilder`.
-    pub fn udp(&mut self, udp: u16) -> &mut Self {
+    pub fn udp4(&mut self, udp: u16) -> &mut Self {
         self.add_value("udp", &udp.to_be_bytes());
         self
     }

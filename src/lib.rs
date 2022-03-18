@@ -57,9 +57,9 @@
 //! let key = k256::ecdsa::SigningKey::random(&mut rng);
 //!
 //! let ip = Ipv4Addr::new(192,168,0,1);
-//! let enr = EnrBuilder::new("v4").ip(ip.into()).tcp(8000).build(&key).unwrap();
+//! let enr = EnrBuilder::new("v4").ip(ip.into()).tcp4(8000).build(&key).unwrap();
 //!
-//! assert_eq!(enr.ip(), Some("192.168.0.1".parse().unwrap()));
+//! assert_eq!(enr.ip4(), Some("192.168.0.1".parse().unwrap()));
 //! assert_eq!(enr.id(), Some("v4".into()));
 //! ```
 //!
@@ -80,7 +80,7 @@
 //! let key = CombinedKey::generate_ed25519();
 //!
 //! let ip = Ipv4Addr::new(192,168,0,1);
-//! let enr = EnrBuilder::new("v4").ip(ip.into()).tcp(8000).build(&key).unwrap();
+//! let enr = EnrBuilder::new("v4").ip(ip.into()).tcp4(8000).build(&key).unwrap();
 //!
 //! assert_eq!(enr.ip(), Some("192.168.0.1".parse().unwrap()));
 //! assert_eq!(enr.id(), Some("v4".into()));
@@ -105,7 +105,7 @@
 //! let key = SigningKey::random(&mut rng);
 //!
 //! let ip = Ipv4Addr::new(192,168,0,1);
-//! let mut enr = EnrBuilder::new("v4").ip(ip.into()).tcp(8000).build(&key).unwrap();
+//! let mut enr = EnrBuilder::new("v4").ip(ip.into()).tcp4(8000).build(&key).unwrap();
 //!
 //! enr.set_tcp(8001, &key);
 //! // set a custom key
@@ -117,9 +117,9 @@
 //! // decode from base64
 //! let decoded_enr: DefaultEnr = base_64_string.parse().unwrap();
 //!
-//! assert_eq!(decoded_enr.ip(), Some("192.168.0.1".parse().unwrap()));
+//! assert_eq!(decoded_enr.ip4(), Some("192.168.0.1".parse().unwrap()));
 //! assert_eq!(decoded_enr.id(), Some("v4".into()));
-//! assert_eq!(decoded_enr.tcp(), Some(8001));
+//! assert_eq!(decoded_enr.tcp4(), Some(8001));
 //! assert_eq!(decoded_enr.get("custom_key"), Some(vec![0,0,1].as_slice()));
 //! ```
 //!
