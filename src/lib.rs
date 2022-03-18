@@ -1094,7 +1094,7 @@ mod tests {
         let enr = {
             let mut builder = EnrBuilder::new("v4");
             builder.ip(ip.into());
-            builder.tcp(tcp);
+            builder.tcp4(tcp);
             builder.build(&key).unwrap()
         };
 
@@ -1146,7 +1146,7 @@ mod tests {
         let mut enr = {
             let mut builder = EnrBuilder::new("v4");
             builder.ip(ip.into());
-            builder.tcp(tcp);
+            builder.tcp4(tcp);
             builder.build(&key).unwrap()
         };
 
@@ -1163,7 +1163,7 @@ mod tests {
 
         let mut enr = {
             let mut builder = EnrBuilder::new("v4");
-            builder.tcp(tcp);
+            builder.tcp4(tcp);
             builder.build(&key).unwrap()
         };
 
@@ -1188,8 +1188,8 @@ mod tests {
         let mut enr = {
             let mut builder = EnrBuilder::new("v4");
             builder.ip(ip.into());
-            builder.tcp(tcp);
-            builder.udp(udp);
+            builder.tcp4(tcp);
+            builder.udp4(udp);
             builder.build(&key).unwrap()
         };
 
