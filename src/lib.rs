@@ -107,7 +107,7 @@
 //! let ip = Ipv4Addr::new(192,168,0,1);
 //! let mut enr = EnrBuilder::new("v4").ip4(ip).tcp4(8000).build(&key).unwrap();
 //!
-//! enr.set_tcp(8001, &key);
+//! enr.set_tcp4(8001, &key);
 //! // set a custom key
 //! enr.insert("custom_key", &vec![0,0,1], &key);
 //!
@@ -566,7 +566,7 @@ impl<K: EnrKey> Enr<K> {
     }
 
     /// Sets the `udp` field of the ENR. Returns any pre-existing UDP port in the record.
-    pub fn set_udp(&mut self, udp: u16, key: &K) -> Result<Option<u16>, EnrError> {
+    pub fn set_udp4(&mut self, udp: u16, key: &K) -> Result<Option<u16>, EnrError> {
         if let Some(udp_bytes) = self.insert("udp", &udp.to_be_bytes(), key)? {
             if udp_bytes.len() <= 2 {
                 let mut v = [0_u8; 2];
@@ -590,7 +590,7 @@ impl<K: EnrKey> Enr<K> {
     }
 
     /// Sets the `tcp` field of the ENR. Returns any pre-existing tcp port in the record.
-    pub fn set_tcp(&mut self, tcp: u16, key: &K) -> Result<Option<u16>, EnrError> {
+    pub fn set_tcp4(&mut self, tcp: u16, key: &K) -> Result<Option<u16>, EnrError> {
         if let Some(tcp_bytes) = self.insert("tcp", &tcp.to_be_bytes(), key)? {
             if tcp_bytes.len() <= 2 {
                 let mut v = [0_u8; 2];
