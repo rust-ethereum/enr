@@ -9,7 +9,7 @@
 mod combined;
 #[cfg(feature = "ed25519")]
 mod ed25519;
-#[cfg(any(feature = "k256", doc))]
+#[cfg(any(feature = "k256"))]
 mod k256_key;
 #[cfg(feature = "rust-secp256k1")]
 mod rust_secp256k1;
@@ -20,7 +20,7 @@ pub use c_secp256k1;
 pub use combined::{CombinedKey, CombinedPublicKey};
 #[cfg(feature = "ed25519")]
 pub use ed25519_dalek;
-#[cfg(any(feature = "k256", doc))]
+#[cfg(any(feature = "k256"))]
 pub use k256;
 
 use crate::Key;

@@ -812,7 +812,7 @@ impl<K: EnrKey> FromStr for Enr<K> {
     }
 }
 
-#[cfg(any(feature = "serde", doc))]
+#[cfg(any(feature = "serde"))]
 impl<K: EnrKey> Serialize for Enr<K> {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
@@ -822,7 +822,7 @@ impl<K: EnrKey> Serialize for Enr<K> {
     }
 }
 
-#[cfg(any(feature = "serde", doc))]
+#[cfg(any(feature = "serde"))]
 impl<'de, K: EnrKey> Deserialize<'de> for Enr<K> {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
