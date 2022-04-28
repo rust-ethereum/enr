@@ -777,9 +777,10 @@ impl<K: EnrKey> std::fmt::Display for Enr<K> {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(
             f,
-            "ENR: NodeId: {}, Socket: {:?}",
+            "ENR: NodeId: {}, IpV4 Socket: {:?} IpV6 Socket: {:?}",
             self.node_id(),
-            self.udp4_socket()
+            self.udp4_socket(),
+            self.udp6_socket()
         )
     }
 }
