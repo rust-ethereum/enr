@@ -242,13 +242,13 @@ impl<K: EnrKey> Enr<K> {
 
     /// The `NodeId` for the record.
     #[must_use]
-    pub fn node_id(&self) -> NodeId {
+    pub const fn node_id(&self) -> NodeId {
         self.node_id
     }
 
     /// The current sequence number of the ENR record.
     #[must_use]
-    pub fn seq(&self) -> u64 {
+    pub const fn seq(&self) -> u64 {
         self.seq
     }
 
